@@ -2,8 +2,8 @@
 -- To change a setting, edit it, then run "rex config reload".
 local settings = {
   -- key = "cmd+l", -- the key of the toggle, or false for none
-  -- placement = "split", -- split, zoomed, tab, or overlay
-  -- direction = "right", -- of the split: right or down
+  -- placement = "overlay", -- overlay, split, zoomed, or tab
+  -- direction = "right", -- of split and zoomed: right or down
   -- ratio = 0.5, -- the share of the split that lazygit gets
 }
 

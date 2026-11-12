@@ -2,7 +2,7 @@
 
 Toggle [lazygit](https://github.com/jesseduffield/lazygit) in a [Rex](https://www.superlogical.com/rex) pane with one key. Modelled on [rexdiff](https://github.com/rednafi/rexdiff).
 
-Press <kbd>Cmd</kbd>+<kbd>L</kbd> to open lazygit beside the focused pane, in that pane's working directory. Press it again to close it.
+Press <kbd>Cmd</kbd>+<kbd>L</kbd> to open lazygit in a floating pane, in the focused pane's working directory. Press it again to close it.
 
 ## Install
 
@@ -22,14 +22,14 @@ Edit `~/.config/rex/lazygit.lua`, then run `rex config reload`.
 | Setting | Default | Values |
 | --- | --- | --- |
 | `key` | `"cmd+l"` | Any Rex key, or `false` for no key |
-| `placement` | `"split"` | `split`, `zoomed`, `tab`, `overlay` |
+| `placement` | `"overlay"` | `overlay` (floating), `split`, `zoomed`, `tab` |
 | `direction` | `"right"` | `right`, `down` (for `split` and `zoomed`) |
 | `ratio` | `0.5` | The share of the split that lazygit gets, between 0 and 1 |
 
 The action is also in the command palette as **Toggle lazygit**, and takes a one-off placement:
 
 ```sh
-rex do lazygit_toggle placement=overlay
+rex do lazygit_toggle placement=split
 ```
 
 ## How it works

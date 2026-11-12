@@ -35,17 +35,18 @@ local function working_directory(block_id)
   return nil
 end
 
-local function open_lazygit_panes(focused_block_id)
-  local blocks = must(rex.session.list_blocks{}).blocks or {}
-  local focused_window_id
+local function window_of(blocks, block_id)
   for _, block in ipairs(blocks) do
-    if block.block_id == focused_block_id then focused_window_id = block.window_id end
+    if block.block_id == block_id then return block.window_id end
   end
+  return nil
+end
 
+local function open_lazygit_panes(blocks, window_id)
   local pane_ids = {}
   for _, block in ipairs(blocks) do
-    local in_focused_window = focused_window_id == nil or block.window_id == focused_window_id
-    if block.creator_name == TERMINAL and in_focused_window
+    local in_window = window_id == nil or block.window_id == window_id
+    if block.creator_name == TERMINAL and in_window
       and (block.label == PANE_LABEL or runs_lazygit(block.block_id)) then
       table.insert(pane_ids, block.block_id)
     end
@@ -60,7 +61,7 @@ local function check_lazygit_runs()
   if not result.ok then error((result.stderr:gsub("%s+$", "")), 0) end
 end
 
-local function open_lazygit(focused_block_id, placement, direction, ratio)
+local function open_lazygit(focused_block_id, window_id, placement, direction, ratio)
   local pane = rex.layout.block{
     flavor = TERMINAL .. ".shell",
     label = PANE_LABEL,
@@ -73,6 +74,7 @@ local function open_lazygit(focused_block_id, placement, direction, ratio)
     return must(rex.session.new_window{ window_label = PANE_LABEL, layout = pane })
   elseif placement == "overlay" then
     return must(rex.session.new_layer{
+      window_id = window_id,
       bounds = { 0.04, 0.04, 0.92, 0.92 },
       layout = pane,
       focus = true,
@@ -98,7 +100,7 @@ return function(settings)
   end
   local key = settings.key
   if key == nil then key = DEFAULT_KEY end
-  local default_placement = settings.placement or "split"
+  local default_placement = settings.placement or "overlay"
   local direction = settings.direction or "right"
   local ratio = settings.ratio or 0.5
   if not PLACEMENTS[default_placement] then
@@ -115,7 +117,7 @@ return function(settings)
   rex.action{
     name = "lazygit_toggle",
     title = "Toggle lazygit",
-    description = "Open lazygit beside the focused pane, or close it",
+    description = "Open lazygit in the focused pane's directory, or close it",
     category = "lazygit",
     keywords = "git lazygit commit stage branch",
     args = { placement = "string?" },
@@ -125,10 +127,12 @@ return function(settings)
         error("unknown placement " .. tostring(placement)
           .. "; use split, zoomed, tab, or overlay", 0)
       end
-      local open_pane_ids = open_lazygit_panes(ctx.block_id)
+      local blocks = must(rex.session.list_blocks{}).blocks or {}
+      local window_id = window_of(blocks, ctx.block_id)
+      local open_pane_ids = open_lazygit_panes(blocks, window_id)
       if #open_pane_ids == 0 then
         check_lazygit_runs()
-        return open_lazygit(ctx.block_id, placement, direction, ratio)
+        return open_lazygit(ctx.block_id, window_id, placement, direction, ratio)
       end
       for _, pane_id in ipairs(open_pane_ids) do
         must(rex.call("block.close", { session_id = ctx.session_id, block_id = pane_id }))
