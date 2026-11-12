@@ -37,3 +37,7 @@ rex do lazygit_toggle placement=split
 - `lazygit.lua` holds your settings. The installer never overwrites it.
 - `lazygit_toggle.lua` holds the action. The installer rewrites it on every run, with the path of lazygit at the top.
 - The toggle looks in the focused tab for a pane labelled `lazygit`, or one whose process tree contains lazygit. If it finds any, it closes them. Otherwise it opens a new one.
+
+## License
+
+[MIT](LICENSE)
