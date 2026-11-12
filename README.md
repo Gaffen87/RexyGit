@@ -1,4 +1,4 @@
-# rex-lazygit
+# RexyGit
 
 Toggle [lazygit](https://github.com/jesseduffield/lazygit) in a [Rex](https://www.superlogical.com/rex) pane with one key. Modelled on [rexdiff](https://github.com/rednafi/rexdiff).
 

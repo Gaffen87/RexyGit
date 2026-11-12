@@ -19,7 +19,7 @@ lua_quoted_bin=$(printf '%s' "$lazygit_bin" | sed 's/\\/\\\\/g; s/"/\\"/g')
 mkdir -p "$config_dir"
 
 {
-  echo "-- install.sh of rex-lazygit writes this file. Do not edit it. Your settings are in lazygit.lua."
+  echo "-- install.sh of RexyGit writes this file. Do not edit it. Your settings are in lazygit.lua."
   echo "local LAZYGIT_BIN = \"$lua_quoted_bin\""
   echo
   cat "$plugin_dir/lua/lazygit_toggle.lua"
